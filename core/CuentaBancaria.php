@@ -28,7 +28,7 @@ class CuentaBancaria
     
         return $statement->fetchColumn();
     }
-    
+
 
     public function obtenerMovimientosPaginados($limit, $offset){
         $query = "SELECT * FROM movimientos LIMIT :limit OFFSET :offset";
@@ -96,24 +96,42 @@ class CuentaBancaria
         }
     }
 
-    public function transferir($idUsuarioOrigen, $idUsuarioDestino, $monto)
-    {
-        $saldoOrigen = $this->obtenerSaldo($idUsuarioOrigen);
-        if ($saldoOrigen >= $monto) {
-            $nuevoSaldoOrigen = $saldoOrigen - $monto;
-            $this->actualizarSaldo($idUsuarioOrigen, $nuevoSaldoOrigen);
-
-            $saldoDestino = $this->obtenerSaldo($idUsuarioDestino);
-            $nuevoSaldoDestino = $saldoDestino + $monto;
-            $this->actualizarSaldo($idUsuarioDestino, $nuevoSaldoDestino);
-            $this->registrarMovimiento($idUsuarioOrigen, 'transferencia', $monto, $idUsuarioDestino);
-            $this->registrarMovimiento($idUsuarioDestino, 'transferencia', $monto, $idUsuarioOrigen);
-
-            return true;
-        } else {
-            return false;
-        }
+public function transferir($idUsuarioOrigen, $idUsuarioDestino, $monto)
+{
+    if (!$this->usuarioExiste($idUsuarioOrigen)) {
+        return "Error: El usuario origen no existe en la base de datos.";
     }
+
+    if (!$this->usuarioExiste($idUsuarioDestino)) {
+        return "Error: El usuario destino no existe en la base de datos.";
+    }
+
+    $saldoOrigen = $this->obtenerSaldo($idUsuarioOrigen);
+    if ($saldoOrigen >= $monto) {
+        $nuevoSaldoOrigen = $saldoOrigen - $monto;
+        $this->actualizarSaldo($idUsuarioOrigen, $nuevoSaldoOrigen);
+
+        $saldoDestino = $this->obtenerSaldo($idUsuarioDestino);
+        $nuevoSaldoDestino = $saldoDestino + $monto;
+        $this->actualizarSaldo($idUsuarioDestino, $nuevoSaldoDestino);
+        $this->registrarMovimiento($idUsuarioOrigen, 'transferencia', $monto, $idUsuarioDestino);
+        $this->registrarMovimiento($idUsuarioDestino, 'transferencia', $monto, $idUsuarioOrigen);
+
+        return true;
+    } else {
+        return "Error: Saldo insuficiente en la cuenta origen.";
+    }
+}
+
+private function usuarioExiste($idUsuario)
+{
+    $query = "SELECT COUNT(*) FROM usuarios WHERE id = :id_usuario";
+    $statement = $this->db->prepare($query);
+    $statement->bindParam(':id_usuario', $idUsuario);
+    $statement->execute();
+
+    return $statement->fetchColumn() > 0;
+}
 
     private function actualizarSaldo($idUsuario, $nuevoSaldo)
     {
