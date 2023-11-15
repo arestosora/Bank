@@ -17,7 +17,7 @@ CREATE TABLE cuentas_bancarias (
 CREATE TABLE movimientos (
     id_transaccion CHAR(36) PRIMARY KEY,
     id_usuario INT,
-    id_usuario_destino INT, -- Nueva columna
+    id_usuario_destino INT,
     nombre_usuario VARCHAR(255),
     tipo_movimiento ENUM('consignacion', 'retiro', 'transferencia') NOT NULL,
     monto DECIMAL(10, 2) NOT NULL,
