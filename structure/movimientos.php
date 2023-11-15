@@ -10,14 +10,8 @@
 
 <?php
 require_once("../core/CuentaBancaria.php"); 
-
-// Iniciar sesión (si no está iniciada)
 session_start();
-
-// Obtener el id_usuario de la sesión
 $idUsuario = $_SESSION['id_usuario'] ?? null;
-
-// Verificar si el usuario ha iniciado sesión
 if (!$idUsuario) {
     echo "<p>Por favor, inicia sesión para ver tus movimientos.</p>";
 } else {
@@ -25,8 +19,6 @@ if (!$idUsuario) {
     $movimientosPorPagina = 10; 
     $paginaActual = isset($_GET['pagina']) ? $_GET['pagina'] : 1;
     $offset = ($paginaActual - 1) * $movimientosPorPagina;
-
-    // Obtener movimientos solo para el usuario que ha iniciado sesión
     $movimientos = $cuentaBancaria->obtenerMovimientosPaginadosPorUsuario($idUsuario, $movimientosPorPagina, $offset);
     $totalMovimientos = $cuentaBancaria->contarMovimientosPorUsuario($idUsuario);
 
