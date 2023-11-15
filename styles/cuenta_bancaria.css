@@ -67,3 +67,35 @@ button {
 button:hover {
     background-color: #29b9a6;
 }
+
+#cerrar-sesion {
+    text-align: center;
+    margin-top: 5px;
+}
+
+#cerrar-sesion a {
+    color: #fff;
+    background-color: #e74c3c;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 4px;
+    display: inline-block;
+}
+
+#cerrar-sesion a:hover {
+    background-color: #c0392b;
+}
+
+#ver-movimientos button {
+    margin-top: 10px;
+    background-color: #2ecc71;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+#ver-movimientos button:hover {
+    background-color: #27ae60;
+}

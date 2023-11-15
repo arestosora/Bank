@@ -47,7 +47,6 @@ if (isset($_SESSION['id_usuario'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="../styles/cuenta_bancaria.css">
-    <script src="../scripts/cuenta_bancaria_script.js"></script>
     <title>Cuenta Bancaria</title>
 </head>
 
@@ -82,8 +81,14 @@ if (isset($_SESSION['id_usuario'])) {
             exit;
             ?>
 <?php endif; ?>
+        <div id="ver-movimientos">
+            <button type="button" onclick="location.href='movimientos.php'">Ver movimientos</button>
+        </div>
+        <div id="cerrar-sesion">
+            <p><a href="../auth/logout.php">Cerrar sesión</a></p>
+        </div>
 
-        <p><a href="logout.php">Cerrar sesión</a></p>
+
     </div>
 </body>
 

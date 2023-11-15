@@ -1,35 +1,29 @@
 <?php
 require_once("../core/Usuarios.php");
-
-// Iniciar sesión
 session_start();
-
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST["email"];
     $password = $_POST["password"];
-
     $usuarios = new Usuarios();
     $usuario = $usuarios->obtenerUsuarioPorEmail($email);
-
     if ($usuario && password_verify($password, $usuario["password"])) {
-        // Inicio de sesión exitoso
-        $_SESSION['id_usuario'] = $usuario['id'];  // Guardar el ID del usuario en la sesión
+        $_SESSION['id_usuario'] = $usuario['id']; 
         header("Location: ../structure/cuenta_bancaria.php");
         exit;
     } else {
         $mensajeInicioSesion = "Error de inicio de sesión. Verifica tus credenciales.";
     }
 }
-?>
 
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="../styles/login.css">
-    <script src="../scripts/login_script.js" defer></script>
     <title>Iniciar Sesión</title>
+    <script src="../scripts/login_script.js"></script>
 </head>
 <body>
     <form method="post" action="login.php" onsubmit="return validarFormulario();">
@@ -43,10 +37,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <p>¿No tienes una cuenta? <a href="register.php">Regístrate aquí</a>.</p>
 
         <?php if (isset($mensajeInicioSesion)): ?>
-            <p id="mensaje-inicio-sesion"><?php echo $mensajeInicioSesion; ?></p>
+            <p id="mensaje-inicio-sesion" style="opacity: 0;"><?php echo $mensajeInicioSesion; ?></p>
         <?php endif; ?>
-
-        <!-- Elemento para mostrar mensajes de error -->
         <p id="error-message" style="display:none;" class="error-message"></p>
     </form>
 </body>

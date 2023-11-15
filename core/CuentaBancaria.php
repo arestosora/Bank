@@ -11,6 +11,33 @@ class CuentaBancaria
         $this->db = MysqlConnection::getInstance()->GetDatabase();
     }
 
+    public function obtenerMovimientos(){
+        $query = "SELECT * FROM movimientos";
+        $statement = $this->db->prepare($query);
+        $statement->execute();
+        $movimientos = $statement->fetchAll(PDO::FETCH_ASSOC);
+        return $movimientos;
+    }
+
+    public function obtenerMovimientosPaginados($limit, $offset){
+        $query = "SELECT * FROM movimientos LIMIT :limit OFFSET :offset";
+        $statement = $this->db->prepare($query);
+        $statement->bindParam(':limit', $limit, PDO::PARAM_INT);
+        $statement->bindParam(':offset', $offset, PDO::PARAM_INT);
+        $statement->execute();
+    
+        return $statement->fetchAll(PDO::FETCH_ASSOC);
+    }
+    
+    public function contarMovimientos(){
+        $query = "SELECT COUNT(*) FROM movimientos";
+        $statement = $this->db->query($query);
+    
+        return $statement->fetchColumn();
+    }
+    
+    
+
     public function obtenerSaldo($idUsuario)
     {
         $query = "SELECT saldo FROM cuentas_bancarias WHERE id_usuario = :id_usuario";
