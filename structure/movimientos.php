@@ -36,7 +36,6 @@ if (!$idUsuario) {
                 <tr>
                     <th>ID Transacción</th>
                     <th>ID Usuario</th>
-                    <th>ID Usuario Destino</th>
                     <th>Nombre Usuario</th>
                     <th>Tipo de Movimiento</th>
                     <th>Monto</th>
@@ -48,7 +47,6 @@ if (!$idUsuario) {
                     <tr>
                         <td><?php echo $movimiento['id_transaccion']; ?></td>
                         <td><?php echo $movimiento['id_usuario']; ?></td>
-                        <td><?php echo $movimiento['id_usuario_destino']; ?></td>
                         <td><?php echo $movimiento['nombre_usuario']; ?></td>
                         <td><?php echo $movimiento['tipo_movimiento']; ?></td>
                         <td><?php echo number_format($movimiento['monto'], 2, ',', '.'); ?></td>
