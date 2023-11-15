@@ -11,55 +11,67 @@
 <?php
 require_once("../core/CuentaBancaria.php"); 
 
-$cuentaBancaria = new CuentaBancaria();
-$movimientosPorPagina = 10; 
-$paginaActual = isset($_GET['pagina']) ? $_GET['pagina'] : 1;
-$offset = ($paginaActual - 1) * $movimientosPorPagina;
-$movimientos = $cuentaBancaria->obtenerMovimientosPaginados($movimientosPorPagina, $offset);
-$totalMovimientos = $cuentaBancaria->contarMovimientos();
-$totalPaginas = ceil($totalMovimientos / $movimientosPorPagina);
-?>
+// Iniciar sesión (si no está iniciada)
+session_start();
 
-<div class="container">
-    
-    <div id="back">
-    
-        <p><a href="cuenta_bancaria.php">Volver</a> <h2>Lista de Movimientos</h2> </p>
-    </div>
+// Obtener el id_usuario de la sesión
+$idUsuario = $_SESSION['id_usuario'] ?? null;
 
-    <table>
-        <thead>
-            <tr>
-                <th>ID Transacción</th>
-                <th>ID Usuario</th>
-                <th>ID Usuario Destino</th>
-                <th>Nombre Usuario</th>
-                <th>Tipo de Movimiento</th>
-                <th>Monto</th>
-                <th>Fecha</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php foreach ($movimientos as $movimiento) : ?>
+// Verificar si el usuario ha iniciado sesión
+if (!$idUsuario) {
+    echo "<p>Por favor, inicia sesión para ver tus movimientos.</p>";
+} else {
+    $cuentaBancaria = new CuentaBancaria();
+    $movimientosPorPagina = 10; 
+    $paginaActual = isset($_GET['pagina']) ? $_GET['pagina'] : 1;
+    $offset = ($paginaActual - 1) * $movimientosPorPagina;
+
+    // Obtener movimientos solo para el usuario que ha iniciado sesión
+    $movimientos = $cuentaBancaria->obtenerMovimientosPaginadosPorUsuario($idUsuario, $movimientosPorPagina, $offset);
+    $totalMovimientos = $cuentaBancaria->contarMovimientosPorUsuario($idUsuario);
+
+    $totalPaginas = ceil($totalMovimientos / $movimientosPorPagina);
+    ?>
+
+    <div class="container">
+        
+        <div id="back">
+            <p><a href="cuenta_bancaria.php">Volver</a> <h2>Lista de Movimientos</h2> </p>
+        </div>
+
+        <table>
+            <thead>
                 <tr>
-                    <td><?php echo $movimiento['id_transaccion']; ?></td>
-                    <td><?php echo $movimiento['id_usuario']; ?></td>
-                    <td><?php echo $movimiento['id_usuario_destino']; ?></td>
-                    <td><?php echo $movimiento['nombre_usuario']; ?></td>
-                    <td><?php echo $movimiento['tipo_movimiento']; ?></td>
-                    <td><?php echo number_format($movimiento['monto'], 2, ',', '.'); ?></td>
-                    <td><?php echo $movimiento['fecha']; ?></td>
+                    <th>ID Transacción</th>
+                    <th>ID Usuario</th>
+                    <th>ID Usuario Destino</th>
+                    <th>Nombre Usuario</th>
+                    <th>Tipo de Movimiento</th>
+                    <th>Monto</th>
+                    <th>Fecha</th>
                 </tr>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                <?php foreach ($movimientos as $movimiento) : ?>
+                    <tr>
+                        <td><?php echo $movimiento['id_transaccion']; ?></td>
+                        <td><?php echo $movimiento['id_usuario']; ?></td>
+                        <td><?php echo $movimiento['id_usuario_destino']; ?></td>
+                        <td><?php echo $movimiento['nombre_usuario']; ?></td>
+                        <td><?php echo $movimiento['tipo_movimiento']; ?></td>
+                        <td><?php echo number_format($movimiento['monto'], 2, ',', '.'); ?></td>
+                        <td><?php echo $movimiento['fecha']; ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
 
-    <div class="pagination">
-        <?php for ($i = 1; $i <= $totalPaginas; $i++) : ?>
-            <a href="?pagina=<?php echo $i; ?>" <?php if ($i == $paginaActual) echo 'class="active"'; ?>><?php echo $i; ?></a>
-        <?php endfor; ?>
+        <div class="pagination">
+            <?php for ($i = 1; $i <= $totalPaginas; $i++) : ?>
+                <a href="?pagina=<?php echo $i; ?>" <?php if ($i == $paginaActual) echo 'class="active"'; ?>><?php echo $i; ?></a>
+            <?php endfor; ?>
+        </div>
     </div>
-</div>
-
+<?php } ?>
 </body>
 </html>

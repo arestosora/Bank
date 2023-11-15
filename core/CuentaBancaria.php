@@ -19,6 +19,17 @@ class CuentaBancaria
         return $movimientos;
     }
 
+    public function contarMovimientosPorUsuario($idUsuario)
+    {
+        $query = "SELECT COUNT(*) FROM movimientos WHERE id_usuario = :id_usuario";
+        $statement = $this->db->prepare($query);
+        $statement->bindParam(':id_usuario', $idUsuario);
+        $statement->execute();
+    
+        return $statement->fetchColumn();
+    }
+    
+
     public function obtenerMovimientosPaginados($limit, $offset){
         $query = "SELECT * FROM movimientos LIMIT :limit OFFSET :offset";
         $statement = $this->db->prepare($query);
@@ -28,6 +39,19 @@ class CuentaBancaria
     
         return $statement->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function obtenerMovimientosPaginadosPorUsuario($idUsuario, $limit, $offset){
+        $query = "SELECT * FROM movimientos WHERE id_usuario = :id_usuario LIMIT :limit OFFSET :offset";
+        $statement = $this->db->prepare($query);
+        $statement->bindParam(':id_usuario', $idUsuario, PDO::PARAM_INT);
+        $statement->bindParam(':limit', $limit, PDO::PARAM_INT);
+        $statement->bindParam(':offset', $offset, PDO::PARAM_INT);
+        $statement->execute();
+    
+        return $statement->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    
     
     public function contarMovimientos(){
         $query = "SELECT COUNT(*) FROM movimientos";
