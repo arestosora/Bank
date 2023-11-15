@@ -25,5 +25,4 @@ CREATE TABLE movimientos (
     FOREIGN KEY (id_usuario) REFERENCES usuarios(id),
     FOREIGN KEY (id_usuario_destino) REFERENCES usuarios(id) 
 );
-
 ```
