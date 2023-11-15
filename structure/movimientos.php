@@ -21,9 +21,10 @@ $totalPaginas = ceil($totalMovimientos / $movimientosPorPagina);
 ?>
 
 <div class="container">
-    <h2>Lista de Movimientos</h2>
-    <div id="cerrar-sesion">
-        <p><a href="cuenta_bancaria.php">Volver</a></p>
+    
+    <div id="back">
+    
+        <p><a href="cuenta_bancaria.php">Volver</a> <h2>Lista de Movimientos</h2> </p>
     </div>
 
     <table>
