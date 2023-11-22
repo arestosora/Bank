@@ -8,7 +8,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $usuario = $usuarios->obtenerUsuarioPorEmail($email);
     if ($usuario && password_verify($password, $usuario["password"])) {
         $_SESSION['id_usuario'] = $usuario['id']; 
-        header("Location: ../structure/cuenta_bancaria.php");
+        header("Location: ../core/formulario.php");
         exit;
     } else {
         $mensajeInicioSesion = "Error de inicio de sesión. Verifica tus credenciales.";

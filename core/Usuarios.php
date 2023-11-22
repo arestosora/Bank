@@ -11,29 +11,21 @@ class Usuarios
         $this->db = MysqlConnection::getInstance()->GetDatabase();
     }
 
-    public function agregarUsuario($nombre, $email, $password, $cedula)
+    public function agregarUsuario($nombre, $email, $password, $identification)
     {
-        $queryAgregarUsuario = "INSERT INTO usuarios (nombre, email, password, cedula) VALUES (:nombre, :email, :password, :cedula)";
+        $queryAgregarUsuario = "INSERT INTO users (identification, email, password) VALUES (:identification , :email, :password)";
         $statementAgregarUsuario = $this->db->prepare($queryAgregarUsuario);
-        $statementAgregarUsuario->bindParam(':nombre', $nombre);
+        $statementAgregarUsuario->bindParam(':identification', $identification); 
         $statementAgregarUsuario->bindParam(':email', $email);
         $statementAgregarUsuario->bindParam(':password', $password);
-        $statementAgregarUsuario->bindParam(':cedula', $cedula); 
         $statementAgregarUsuario->execute();
-        
         $id_usuario = $this->db->lastInsertId();
-        
-        $queryAgregarCuenta = "INSERT INTO cuentas_bancarias (id_usuario, saldo) VALUES (:id_usuario, :saldo)";
-        $statementAgregarCuenta = $this->db->prepare($queryAgregarCuenta);
-        $saldoInicial = 5000; 
-        $statementAgregarCuenta->bindParam(':id_usuario', $id_usuario);
-        $statementAgregarCuenta->bindParam(':saldo', $saldoInicial);
-        $statementAgregarCuenta->execute();
+        return $id_usuario;
     }
 
     public function obtenerUsuarioPorEmail($email)
     {
-        $query = "SELECT * FROM usuarios WHERE email = :email";
+        $query = "SELECT * FROM users WHERE email = :email";
         $statement = $this->db->prepare($query);
         $statement->bindParam(':email', $email);
         $statement->execute();
